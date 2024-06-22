@@ -1,0 +1,37 @@
+version: '3.7'
+
+networks:
+  multi-network:
+
+services:
+  image:
+    container_name: docker-app
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=sagar
+      - SPRING_DATASOURCE_PASSWORD=1234
+    depends_on:
+      - postgres-db
+    networks:
+      - multi-network
+
+  postgres-db:
+    image: postgres:latest
+    container_name: db-container
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=sagar
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - multi-network
+
+volumes:
+  postgres-data:
+
